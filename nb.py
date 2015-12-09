@@ -8,7 +8,7 @@ Clase genérica para realizar el método de clasificación de naive bayes.
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'Luis Fernando Suarez Astiazaran'
 
 
 class NaiveBayes(object):
@@ -80,7 +80,11 @@ class NaiveBayes(object):
 
             #---------------------------------------------------
             # agregar aqui el código
-            pass
+            tam = len(clases)
+            for i in range(tam):
+                if clases[i] == clase:
+                    self.cuentas['clases'][clase] += 1
+            #pass
             #---------------------------------------------------
 
         # Ahora se llena el valor de las cuentas por cada atributo y para cada posible clase
@@ -89,7 +93,11 @@ class NaiveBayes(object):
 
                 #--------------------------------------------------
                 # agregar aquí el código
-                pass
+                for j in self.cuentas[self.vars[i]][clase]:
+                    for k in range(len(datos)):
+                        if datos[k][i] == j and clases[k] == clase:
+                            self.cuentas[self.vars[i]][clase][j] += 1
+                #pass
                 #--------------------------------------------------
 
     def reconoce(self, datos):
@@ -107,6 +115,24 @@ class NaiveBayes(object):
 
         #---------------------------------------------------
         # agregar aquí el código
+        for clase in self.cls_nombre:
+            self.num_datos += self.cuentas['clases'][clase]
+
+            for i in range(len(datos)):
+                mejor = -1.0
+                for clase in self.cls_nombre:
+                    actual = 1.0
+                    for j in range(len(self.vars)):
+                        a = 1 + self.cuentas[self.vars[j]][clase][datos[i][j]]
+                        b = len(self.cuentas[self.vars[j]][clase]) + self.cuentas['clases'][clase]
+                        actual *= a / b
+
+                    actual *= self.cuentas['clases'][clase] / self.num_datos
+
+                    if (actual > mejor):
+                        c_mejor = clase
+                        mejor = actual
+                clases.append(c_mejor)
         #---------------------------------------------------
 
         return clases

@@ -15,7 +15,7 @@ Los datos ya vienen preprocesados de forma que
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'Luis Fernando Suarez Astiazaran'
 
 from random import randint
 
@@ -79,6 +79,18 @@ def spam_filter():
 
     #---------------------------------------------------
     # agregar aqui el código
+    vocabulario = carga_vocabulario()
+    datos, clases = carga_datos('mails.data','mails.class')
+    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador.aprende(datos, clases)
+    clases_estimadas = clasificador.reconoce(datos)
+    error_entrenamiento = naive_bayes.error_clasif(clases, clases_estimadas)
+
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador.aprende(datos, clases)
+    clases_estimadas = clasificador.reconoce(datos)
+    error_prueba = naive_bayes.error_clasif(clases, clases_estimadas)
     #---------------------------------------------------
 
     return error_entrenamiento, error_prueba
