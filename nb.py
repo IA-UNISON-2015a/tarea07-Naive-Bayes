@@ -20,8 +20,7 @@ class NaiveBayes(object):
     def __init__(self, variables=(), vals=None, cls_nombre=None):
         """
         Inicializa el algoritmo con vars el nombre de las variables de los atributos (no la clase),
-        y valos un diccionario donde
-            vals[var] = set([val1, ..., valm])
+        y valos un diccionario donde vals[var] = set([val1, ..., valm])
         son los valores que puede tomar la variable var. Si vals es None, entonces vals se construye
         con los valores que se tienen en el conjunto de aprendizaje.
 
@@ -30,6 +29,10 @@ class NaiveBayes(object):
         frecuencias, y se espera a que inicie el aparendizaje para inicializar las cuentas. Para
         mas información sobre como manejaremos las frecuencias, revisar la documentación del método
         genera_cuentas.
+
+        vars = nombre de variables de atributos
+        vals = valores que puede tomar
+        clases = [clase1, clasek] nombre de las k clases en las que se puede clasificar.
 
         """
         self.vars = variables
@@ -65,6 +68,11 @@ class NaiveBayes(object):
         """
         Aprende los valores de la CPT, es el trabajo a realizar
 
+        datos =[datum1,datum2,..datumN]
+        datum1 = [datum1a, datum1b, ...]
+        clase = [clase1,...claseN]
+        claseN = clasificacion asociada a datum1--N
+
         """
         if self.vals is None:
             self.vals = {self.vars[i]: set([datos[j][i] for j in range(len(datos))]) for i in range(len(self.vars))}
@@ -76,20 +84,28 @@ class NaiveBayes(object):
         # Aqui comienza el código para hacer el llenado de las CPT
 
         # Primero se llena el valor de las cuentas para calcular la probabilidad a priori
-        for clase in self.cls_nombre:
-
+        for clase in self.cls_nombre: #Para cada una de las clases definidas en nuestro clasificador
             #---------------------------------------------------
             # agregar aqui el código
-            pass
+            for i in range(len(clases)):
+                if clases[i] == clase: #Encontramos el match para cada clase recorriendo el arreglo
+                    self.cuentas['clases'][clase] += 1 #Le damos un +1 a la clases con match con esto podremos calcular frecuencias.
+
+                    #Incidencia de una clase en total.
             #---------------------------------------------------
 
         # Ahora se llena el valor de las cuentas por cada atributo y para cada posible clase
-        for i in range(len(self.vars)):
-            for clase in self.cls_nombre:
+        for i in range(len(self.vars)): #Por cada variable de atributo
+            for clase in self.cls_nombre:  #Por cada clase existente
 
                 #--------------------------------------------------
                 # agregar aquí el código
-                pass
+                for j in self.cuentas[self.vars[i]][clase]: #Por el numero de variables
+                    for k in range(len(datos)):
+                        if datos[k][i] == j and clases[k] == clase:
+                            self.cuentas[self.vars[i]][clase][j] +=1
+
+                            #Incidencia de una clase con una val en particular.
                 #--------------------------------------------------
 
     def reconoce(self, datos):
@@ -108,6 +124,21 @@ class NaiveBayes(object):
         #---------------------------------------------------
         # agregar aquí el código
         #---------------------------------------------------
+        base = -1;
+        for clase in self.cls_nombre: # Por cada en la que se puede clasificar
+            num_datos = self.cuentas['clases'][clase]
+            for i in range(len(datos)): #Por cada uno de los datos de entrada
+                for clase in self.cls_nombre:
+                    actual = 1.0
+                    for j in range(len(self.vars)):
+                        actual *= self.cuentas['clases'][clase] / num_datos
+
+
+                    if (actual>base):
+                        c_mejor = clase
+                        base = actual
+                clases.append(c_mejor)
+
 
         return clases
 
