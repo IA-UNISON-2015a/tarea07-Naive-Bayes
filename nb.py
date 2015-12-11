@@ -122,10 +122,32 @@ class NaiveBayes(object):
         #print 'Cuentas: ', self.cuentas
         #print 'Nombre: ', self.cls_nombre
 
-
-
         #---------------------------------------------------
         # agregar aquí el código
+        for clase in self.cls_nombre:
+            print 'clase: ', clase
+            self.num_datos += self.cuentas['clases'][clase]
+            print 'self.num_datos: ', self.num_datos 
+            for i in range(len(datos)):
+                A = -1.0
+                for clase in self.cls_nombre:
+                    print 'Clase name: ',self.cls_nombre, 'CLASS', clase
+                    A2 = 1.0
+                    for j in range(len(self.vars)):
+                        a1 = 1 + self.cuentas[self.vars[j]][clase][datos[i][j]]
+                        print 'Cuentas: ',self.cuentas[self.vars[j]][clase][datos[i][j]] ,' self.vars: ',self.vars[j],'Datos: ',datos[i][j]
+                        a2 = len(self.cuentas[self.vars[j]][clase]) + self.cuentas['clases'][clase]
+                        print 'self.cuentas: ',self.cuentas['clases'][clase]
+                        print 'a1> ',a1,'a2> ',a2
+                        A2 *= a1 / a2
+                        print 'A2: ',A2
+
+                    A2 *= self.cuentas['clases'][clase] / self.num_datos
+                    print 'a2: ',A2
+                    if (A2 > A):
+                        M = clase
+                        A = A2
+                clases.append(M)
         #---------------------------------------------------
 
         return clases
@@ -168,8 +190,7 @@ def test():
 
     data_test = [[2, 20], [4, 10]]
     clase_test = nb.reconoce(data_test)
-    if clase_test == ['P', 'N']:
-
+    if clase_test == ['P', 'N']: #El assert no me funcionaba aqui...
         print "La tercera prueba se completó con exito"
 
 if __name__ == "__main__":
