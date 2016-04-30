@@ -87,8 +87,12 @@ def spam_filter():
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
 
+    """
+    Solo para "debuggear" :>
     print clases
     print clases_estimadas  
+
+    """
 
     error_entrenamiento = naive_bayes.error_clasif(clases, clases_estimadas)
     datos, clases = carga_datos('mails_test.data','mails_test.class')
