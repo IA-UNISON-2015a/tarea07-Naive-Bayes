@@ -80,7 +80,10 @@ class NaiveBayes(object):
 
             #---------------------------------------------------
             # agregar aqui el código
-            pass
+            size = len(clases)
+            for i in range(size):
+                if clases[i] == clase:
+                    self.cuentas['clases'][clase] +=1 
             #---------------------------------------------------
 
         # Ahora se llena el valor de las cuentas por cada atributo y para cada posible clase
@@ -89,7 +92,10 @@ class NaiveBayes(object):
 
                 #--------------------------------------------------
                 # agregar aquí el código
-                pass
+                for j in self.cuentas[self.vars[i]][clase]:
+                    for k in range(len(datos)):
+                        if datos[k][i] == j and clases[k] == clase:
+                            self.cuentas[self.vars[i]][clase][j] += 1
                 #--------------------------------------------------
 
     def reconoce(self, datos):
@@ -108,6 +114,24 @@ class NaiveBayes(object):
         #---------------------------------------------------
         # agregar aquí el código
         #---------------------------------------------------
+
+        for clase in self.cls_nombre:
+            self.num_datos += self.cuentas['clases'][clase]
+            for i in range(len(datos)):
+                inicial = -1.0
+                for clase in self.cls_nombre:
+                    nuevo = 1.0
+                    nuevo *= self.cuentas['clases'][clase]/self.num_datos
+
+                    mejor = None
+
+                    if nuevo > inicial:
+                        mejor = clase
+                        inicial = nuevo
+
+                clases.append(mejor)
+
+
 
         return clases
 
