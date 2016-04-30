@@ -119,19 +119,18 @@ class NaiveBayes(object):
             self.num_datos += self.cuentas['clases'][clase]
             for i in range(len(datos)):
                 inicial = -1.0
-                for clase in self.cls_nombre:
+                for c in self.cls_nombre:
                     nuevo = 1.0
-                    nuevo *= self.cuentas['clases'][clase]/self.num_datos
 
-                    mejor = None
+                    nuevo *= self.cuentas['clases'][c]/self.num_datos
+
+                    #mejor = None <-- ESTA COSA FEA 
 
                     if nuevo > inicial:
                         mejor = clase
                         inicial = nuevo
 
-                clases.append(mejor)
-
-
+            clases.append(mejor)    #Si se pone en el ciclo más externo, los asserts funcionan... Si se pone aqui no funcionan pero spam_filter si funciona.. help
 
         return clases
 
