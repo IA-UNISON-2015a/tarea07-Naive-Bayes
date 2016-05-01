@@ -18,7 +18,7 @@ Los datos ya vienen preprocesados de forma que
 __author__ = 'juliowaissman'
 
 from random import randint
-
+import nb
 
 def carga_datos(file_datos, file_clases):
 
@@ -80,10 +80,20 @@ def spam_filter():
     #---------------------------------------------------
     # agregar aqui el código
     #---------------------------------------------------
-
+    bayes = nb.NaiveBayes()
+    
+    datos, clases = carga_datos('mails.data','mails.class')
+    bayes.aprende(datos, clases)
+    recon = bayes.reconoce(datos)
+    error_entrenamiento = 1.0*len([1 for i in range(len(recon)) if recon[i] != clases[i]])/len(clases)
+    
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    recon = bayes.reconoce(datos)
+    error_prueba = 1.0*len([1 for i in range(len(recon)) if recon[i] != clases[i]])/len(clases)
+    
     return error_entrenamiento, error_prueba
 
 if __name__ == "__main__":
-    ejemplo_datos()
-    #ee, ep = spam_filter()
-    #print "El error de entrenamiento es ",ee," %, mientras que el error de predicción es ",ep," %."
+    #ejemplo_datos()
+    ee, ep = spam_filter()
+    print "El error de entrenamiento es ",ee," %, mientras que el error de predicción es ",ep," %."
