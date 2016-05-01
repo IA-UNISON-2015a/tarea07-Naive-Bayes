@@ -77,10 +77,13 @@ class NaiveBayes(object):
 
         # Primero se llena el valor de las cuentas para calcular la probabilidad a priori
         for clase in self.cls_nombre:
-
+            
             #---------------------------------------------------
             # agregar aqui el código
-            pass
+            for c in clases:
+                if c == clase:
+                    self.cuentas['clases'][clase] += 1
+            
             #---------------------------------------------------
 
         # Ahora se llena el valor de las cuentas por cada atributo y para cada posible clase
@@ -89,8 +92,12 @@ class NaiveBayes(object):
 
                 #--------------------------------------------------
                 # agregar aquí el código
-                pass
+                #[val1: a, val2:b,...]
                 #--------------------------------------------------
+                for j in range(len(datos)):
+                    if clases[j] == clase:
+                        self.cuentas[self.vars[i]][clase][datos[j][i]] += 1
+                        
 
     def reconoce(self, datos):
         """
@@ -108,7 +115,14 @@ class NaiveBayes(object):
         #---------------------------------------------------
         # agregar aquí el código
         #---------------------------------------------------
-
+        for d in range(len(datos)):
+            p = { clase: 1 for clase in self.cls_nombre }
+            for clase in self.cls_nombre:
+                for i in range(len(self.vars)):
+                    p[clase] *= ((self.cuentas[self.vars[i]][clase][datos[d][i]] + 1.0)
+                            /(self.cuentas['clases'][clase] + len(self.cuentas[self.vars[i]][clase])))
+            clases.append(max(p, key=lambda k: p[k]))
+        
         return clases
 
 
