@@ -80,8 +80,11 @@ class NaiveBayes(object):
 
             #---------------------------------------------------
             # agregar aqui el código
-            pass
+            #pass
             #---------------------------------------------------
+            for i in range(len(clases)):
+                if clases[i] == clase:
+                    self.cuentas['clases'][clase] += 1
 
         # Ahora se llena el valor de las cuentas por cada atributo y para cada posible clase
         for i in range(len(self.vars)):
@@ -89,8 +92,12 @@ class NaiveBayes(object):
 
                 #--------------------------------------------------
                 # agregar aquí el código
-                pass
+                #pass
                 #--------------------------------------------------
+                for j in self.cuentas[self.vars[i]][clase]:
+                    for k in range(len(datos)):
+                        if datos[k][i] == j and clases[k] == clase:
+                            self.cuentas[self.vars[i]][clase][j] += 1
 
     def reconoce(self, datos):
         """
@@ -108,6 +115,21 @@ class NaiveBayes(object):
         #---------------------------------------------------
         # agregar aquí el código
         #---------------------------------------------------
+        for clase in self.cls_nombre:
+            self.num_datos += self.cuentas['clases'][clase]
+            for i in range(len(datos)):
+                mejor = -1.0
+                for clase2 in self.cls_nombre:
+                    presente = 1.0
+                    for j in range(len(self.vars)):
+                        a = 1 + self.cuentas[self.vars[j]][clase2][datos[i][j]]
+                        b = len(self.cuentas[self.vars[j]][clase2]) + self.cuentas['clases'][clase2]
+                        presente *= a / b
+                    presente *= self.cuentas['clases'][clase2] / self.num_datos
+                    if presente > mejor:
+                        mejor = clase
+                        mejor = presente
+            clases.append(mejor)
 
         return clases
 
