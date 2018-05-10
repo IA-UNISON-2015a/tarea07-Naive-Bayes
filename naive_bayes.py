@@ -98,3 +98,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    """
+    Los resultados son parecidos con y sin ruido, debido a que aunque exista ruido
+    en la segunda base de datos, el resto de los valores de las variables son creíbles
+    y siguen teniendo el mismo peso al momento de calcular la probabilidad de que
+    un dato pertenezca a una clase en particular, es decir, el ruido llega a ser
+    'ignorado' porque siguen siendo muchos más valores reales.
+    """
