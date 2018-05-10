@@ -12,22 +12,21 @@ Para mayor información sobre la base de datos, se puede consultar en
 
 http://archive.ics.uci.edu/ml/datasets/Molecular+Biology+(Splice-junction+Gene+Sequences)
 
-La base ya se trato, y se convirtieron los valores de genes a numeros enteros
+La base ya se trató y se convirtieron los valores de genes a números enteros
 con el fin de poder utilizar la base para varios métodos de clasificación (como
 redes neuronales).
 
 La base de datos ya se repartió en una base de entrenamiento (dna.data) y otra
-base de prueba(dna.test). Con el fin de probar la robustez de los algoritmos de
+base de prueba (dna.test.) Con el fin de probar la robustez de los algoritmos de
 aprendizaje ante ruido, se agregó a la base otros atributos extra con valores
-asignados al azar (como si tuvieramos atributos extra con información no
-significativa). Estos datos se encuentran en dna_noise.data y dna_noise.test
+asignados al azar (como si tuviéramos atributos extra con información no
+significativa.) Estos datos se encuentran en dna_noise.data y dna_noise.test
 respectivamente.
 
 Para estar seguro que el algoritmo funciona, tanto sin ruido como con
 ruido el error de clasificación con los datos originales debe estar
 por debajo del 5%, mientras que el error en el conjunto de prueba debe
 de andar un poco por arriba del 5% pero claramente menor al 7%
-
 """
 
 import nb
@@ -43,7 +42,6 @@ def carga_archivo(archivo):
 
     - clases = [clase1, clase2, ..., claseE] la clase a la que pertenece
       cada dato
-
     """
     datos, clases = [], []
 
@@ -58,19 +56,17 @@ def carga_archivo(archivo):
 def error_clasif(c1, c2):
     """
     Encuentra el porcentaje de valores diferentes entre la lista c1 y la c2
-
     """
     acc = len([1 for i in range(len(c1)) if c1[i] != c2[i]])
     return 1.0 * acc / len(c1)
 
 
 def main():
-
     print("\nPrueba con la base de datos de DNA sin ruido")
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes([1,2,3])
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +84,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes([1,2,3])
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
@@ -99,7 +95,6 @@ def main():
     c_e_test = clasificador_ruido.reconoce(d_test)
     e_test = error_clasif(c_test, c_e_test)
     print("Error de estimación en los datos de prueba: "+str(e_test*100)+"%\n")
-
 
 if __name__ == "__main__":
     main()
