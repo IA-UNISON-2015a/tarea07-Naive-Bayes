@@ -143,7 +143,7 @@ class NaiveBayes:
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
         N = sum([self.frec['clases'][cls] for cls in self.clases])
-        for clase in self.clases:
+        for clase in clases:
             #  ---------------------------------------------------
             #  agregar aqui el código
             Nc = self.frec['clases'][clase]
