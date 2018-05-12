@@ -8,7 +8,7 @@ Clase genérica para realizar el método de clasificación de naive bayes.
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'luis fernando'
 
 from math import log
 
@@ -239,3 +239,4 @@ def test():
 
 if __name__ == "__main__":
     test()
+

@@ -15,7 +15,7 @@ Los datos ya vienen preprocesados de forma que
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'luis fernando'
 
 from random import randint
 
@@ -91,3 +91,4 @@ if __name__ == "__main__":
     #  ee, ep = spam_filter()
     #  print("El error de entrenamiento es {}".format(ee))
     #  print("El error de predicción es {}".format(ep))
+
