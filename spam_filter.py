@@ -11,13 +11,15 @@ en el mail y 0 si no se encuentra en el mail.
 
 Las clases tambien son binarias, 1 si son spam y 0 si no son spam.
 
-Los datos ya vienen preprocesados de forma que
+Los datos ya vienen preprocesados de forma que ... continuara
 
 """
 
 __author__ = 'juliowaissman'
 
 from random import randint
+import nb
+from naive_bayes import error_clasif
 
 
 def carga_datos(file_datos, file_clases):
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -76,18 +78,28 @@ def spam_filter():
     de entrenamiento como con los datos de prueba
 
     """
-    error_entrenamiento = 1.0
-    error_prueba = 1.0
 
     #  ---------------------------------------------------
     #   agregar aqui el código
     #  ---------------------------------------------------
+    datos, clases = carga_datos('mails.data', 'mails.class')
+    datos_test, clases_test = carga_datos('mails_test.data',
+                                          'mails_test.class')
 
-    return error_entrenamiento, error_prueba
+    clasificador = nb.NaiveBayes()
+    clasificador.aprende(datos, clases)
+
+    clases_estimadas = clasificador.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, clases_estimadas)
+
+    clases_estimadas_test = clasificador.reconoce(datos_test)
+    error_prueba = error_clasif(clases_test, clases_estimadas_test)
+
+    return error_entrenamiento * 100, error_prueba * 100
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}%".format(ee))
+    print("El error de predicción es {}%".format(ep))
