@@ -11,14 +11,15 @@ en el mail y 0 si no se encuentra en el mail.
 
 Las clases tambien son binarias, 1 si son spam y 0 si no son spam.
 
-Los datos ya vienen preprocesados de forma que
+Los datos ya vienen preprocesados
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'cesarSalazar'
 
 from random import randint
-
+import nb
+from naive_bayes import error_clasif
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +43,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -76,18 +77,38 @@ def spam_filter():
     de entrenamiento como con los datos de prueba
 
     """
-    error_entrenamiento = 1.0
-    error_prueba = 1.0
-
+    #CODIGO
     #  ---------------------------------------------------
-    #   agregar aqui el código
+    datos, clases = carga_datos('mails.data', 'mails.class')
+    datosPrueba, clasesPrueba = carga_datos('mails_test.data','mails_test.class')
+    clasificador = nb.NaiveBayes([0,1]) #no o si
+    clasificador.aprende(datos, clases)
+    #ENTRENAMIENTO
+    clasesEstimadas = clasificador.reconoce(datos)
+    errorEntrenamiento = error_clasif(clases, clasesEstimadas)
+    #PRUEBA
+    clasesEstimadas = clasificador.reconoce(datosPrueba)
+    errorPrueba = error_clasif(clasesPrueba, clasesEstimadas)
     #  ---------------------------------------------------
-
-    return error_entrenamiento, error_prueba
+    return errorEntrenamiento*100, errorPrueba*100
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    spam_filter()
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+    """
+    ¿Es posible detectar con Naive Bayes cuales son las palabras que más influyen para 
+    decidir que un correo es Spam? 
+
+    - Dependiendo de las ocurrencias de las palabras en los mails que fueron clasificados como spam
+      o las que aparecen en las que no son spam.  
+
+    ¿Cuañes palabras son las que determinan más claramente que un correo no es Spam?
+    
+    - Al parecer las palabras que mas influyen en si es spam son las que estan relacionadas con productos
+      o dinero, en el caso de no ser spam parece que influye mucho qeu tengan sustantivos y verbos 
+
+    """
