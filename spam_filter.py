@@ -19,6 +19,10 @@ __author__ = 'luis fernando'
 
 from random import randint
 
+import nb
+
+from naive_bayes import error_clasif
+
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +46,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -76,19 +80,42 @@ def spam_filter():
     de entrenamiento como con los datos de prueba
 
     """
-    error_entrenamiento = 1.0
-    error_prueba = 1.0
 
     #  ---------------------------------------------------
     #   agregar aqui el código
     #  ---------------------------------------------------
 
-    return error_entrenamiento, error_prueba
+    datos, clases = carga_datos('mails.data','mails.class')
 
+    bayesTonto = nb.NaiveBayes()
+    bayesTonto.aprende(datos, clases)
+    clasesReconocidas = bayesTonto.reconoce(datos)
+
+    errorEntrenamiento = error_clasif(clases, clasesReconocidas)
+
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    clasesReconocidas = bayesTonto.reconoce(datos)
+
+    errorPrueba = error_clasif(clases, clasesReconocidas)
+
+    return errorEntrenamiento, errorPrueba
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+
+    """
+    ¿Es posible detectar con Naive Bayes cuales son las palabras que más
+    influyen para decidir que un correo es Spam? ¿Cuales palabras son las
+    que determinan más claramente que un correo no es Spam?
+
+    Deberia ser posible poder detectar las palabras mas influyentes en
+    este metodo de red bayesiana si se cuentan el numero de ocurrencias
+    que mas hacen a la red pensar que se trata de spam. Por ejemplo, los
+    correos marcados como spam usualmente tienen palabras que intentan llamar
+    la atencion como 'heaven', 'click' o 'money' mientras que los que no son,
+    no las tienen o estan en menor medida.
+    """
 
