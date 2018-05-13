@@ -32,7 +32,6 @@ de andar un poco por arriba del 5% pero claramente menor al 7%
 
 import nb
 
-
 def carga_archivo(archivo):
     """
     Cargar el archivo de datos a clasificar, devuelve
@@ -65,41 +64,65 @@ def error_clasif(c1, c2):
 
 
 def main():
-
+    
     print("\nPrueba con la base de datos de DNA sin ruido")
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes()
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
     error = error_clasif(clases, clases_estimadas)
     print("Error de estimación en los mismos datos: " +
-          str(error*100)+" %")
+        str(error*100)+" %")
 
-    d_test, c_test = carga_archivo("dna.test")
-    c_e_test = clasificador.reconoce(d_test)
-    e_test = error_clasif(c_test, c_e_test)
+    datos_test, clases_test = carga_archivo("dna.test")
+    clases_estimadas_test = clasificador.reconoce(datos_test)
+    error_test = error_clasif(clases_test, clases_estimadas_test)
     print("Error de estimación en los datos de prueba: " +
-          str(e_test*100)+" %\n")
+        str(error_test*100)+" %\n")
 
     print("\nPrueba con la base de datos de DNA con ruido")
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes()
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
     error = error_clasif(clases, clases_estimadas)
     print("Error de estimación en los mismos datos: "+str(error*100)+"%")
 
-    d_test, c_test = carga_archivo("dna_noise.test")
-    c_e_test = clasificador_ruido.reconoce(d_test)
-    e_test = error_clasif(c_test, c_e_test)
-    print("Error de estimación en los datos de prueba: "+str(e_test*100)+"%\n")
+    datos_test, clases_test = carga_archivo("dna_noise.test")
+    clases_estimadas_test = clasificador_ruido.reconoce(datos_test)
+    error_test = error_clasif(clases_test, clases_estimadas_test)
+    print("Error de estimación en los datos de prueba: "+str(error_test*100)+"%\n")
 
 
 if __name__ == "__main__":
     main()
+
+"""
+Resultados:
+
+    Prueba con la base de datos de DNA sin ruido
+    ----------------------------------------------
+    Error de estimación en los mismos datos: 4.05 %
+    Error de estimación en los datos de prueba: 5.649241146711636 %
+
+    Prueba con la base de datos de DNA con ruido
+    ----------------------------------------------
+    Error de estimación en los mismos datos: 3.85%
+    Error de estimación en los datos de prueba: 5.480607082630692%
+
+Conclusion:
+
+    Los resultados obtenidos son similares, pero los porcentajes
+    son mejores con los datos con ruido. Esto se debe a que
+    a la hora de calcular las probabilidades siguen estando los datos
+    sin ruido y estos siguen teniendo gran valor en el calculo y los datos
+    con ruido no influyen tanto debido a que deben ser pocos comparado
+    con los datos sin ruido.
+
+"""
