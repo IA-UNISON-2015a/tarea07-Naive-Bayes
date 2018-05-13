@@ -103,3 +103,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    """
+    Los porcentajes de errores son similares para ambos archivos (con y sin ruido) porque 
+    los datos reales tienen más peso en el calculo y los que tienen ruido no llegan a afectar.
+    """
