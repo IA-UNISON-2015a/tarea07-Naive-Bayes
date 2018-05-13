@@ -99,6 +99,14 @@ def spam_filter():
 
 
 if __name__ == "__main__":
+    """
+    Dado que un correo es spam es posible ver cuales palabras son aquellas
+    que lo han hecho ser clasificado como tal pues se revisan las frecuencias
+    de dichas palabras. solo es cuestion de comparar dichas ocurrencias y
+    aquellas palabras que hacen considerar a un correo como spam.
+
+    Pareciera que las palabras que influyen son los verbos y nombres propios
+    """
     ejemplo_datos()
     ee, ep = spam_filter()
     print("El error de entrenamiento es {}%".format(ee))

@@ -102,4 +102,9 @@ def main():
 
 
 if __name__ == "__main__":
+    """
+    Las clases son las mismas (por alguna razon ningun renglon termina en 4).
+    El agregar ruido es poco significativo para este caso pues las frecuencias
+    no se afectan de una manera muy marcada.
+    """
     main()
