@@ -36,14 +36,13 @@ import nb
 def carga_archivo(archivo):
     """
     Cargar el archivo de datos a clasificar, devuelve
-
+    
     - datos = [dato1, dato2, ..., datoE], la lista de E datos a clasificar
       donde dato1 = [dato1(1), ..., dato1(n)] son los n valores de los
       atributos de dato1.
-
+      
     - clases = [clase1, clase2, ..., claseE] la clase a la que pertenece
       cada dato
-
     """
     datos, clases = [], []
 
@@ -58,19 +57,17 @@ def carga_archivo(archivo):
 def error_clasif(c1, c2):
     """
     Encuentra el porcentaje de valores diferentes entre la lista c1 y la c2
-
     """
     acc = len([1 for i in range(len(c1)) if c1[i] != c2[i]])
     return 1.0 * acc / len(c1)
 
 
 def main():
-
     print("\nPrueba con la base de datos de DNA sin ruido")
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes([1,2,3])
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +85,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes([1,2,3])
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
@@ -100,6 +97,20 @@ def main():
     e_test = error_clasif(c_test, c_e_test)
     print("Error de estimación en los datos de prueba: "+str(e_test*100)+"%\n")
 
-
 if __name__ == "__main__":
     main()
+'''
+Prueba con la base de datos de DNA sin ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 4.05 %
+Error de estimación en los datos de prueba: 5.649241146711636 %
+
+
+Prueba con la base de datos de DNA con ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 3.85%
+Error de estimación en los datos de prueba: 5.480607082630692%
+
+El ruido incluso mejora los resultados, pues le agrega variacion evitando el
+sobreaprendizaje.
+'''

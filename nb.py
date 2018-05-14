@@ -8,7 +8,7 @@ Clase genérica para realizar el método de clasificación de naive bayes.
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'Jordan Urias'
 
 from math import log
 
@@ -120,7 +120,10 @@ class NaiveBayes:
             self.frec['clases'][clase] += clases.count(clase)
             #  raise NotImplementedError("Falta cmletar esto para la tarea")
             #  ---------------------------------------------------
-
+            '''
+            Es tan elegante que me dio pena borrarlo, posiblemente mi primera
+            implementaccion seria un ifs anidados que dependiendo de la clase sumaria +1.
+            '''
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
             for (i, var) in enumerate(self.var_nom):
@@ -138,12 +141,12 @@ class NaiveBayes:
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
-        N = sum([self.frec['clases'][cls] for cls in clases])
+        N = sum([self.frec['clases'][cls] for cls in  self.frec['clases'].keys()])
         for clase in clases:
             #  ---------------------------------------------------
             #  agregar aqui el código
             Nc = self.frec['clases'][clase]
-            self.log_probs['clases'][clase] = log(N/Nc)
+            self.log_probs['clases'][clase] = log(Nc/N)
             #  raise NotImplementedError("Falta cmletar esto para la tarea")
             #  ---------------------------------------------------
 
@@ -226,8 +229,8 @@ def test():
     print("La segunda prueba se completó con exito")
 
     assert nb.log_probs['clases']['N'] == log(5/8)
-    assert nb.frec['0']['P'][1] == log(1/7)
-    assert nb.frec['1']['N'][20] == log(4/7)
+    assert nb.log_probs['0']['P'][1] == log(1/7)
+    assert nb.log_probs['1']['N'][20] == log(4/7)
     print("La tercera prueba se completó con exito")
 
     data_test = [[2, 20], [4, 10]]
