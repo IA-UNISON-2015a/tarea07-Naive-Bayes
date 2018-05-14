@@ -120,7 +120,10 @@ class NaiveBayes:
             self.frec['clases'][clase] += clases.count(clase)
             #  raise NotImplementedError("Falta cmletar esto para la tarea")
             #  ---------------------------------------------------
-
+            '''
+            Es tan elegante que me dio pena borrarlo, posiblemente mi primera
+            implementaccion seria un ifs anidados que dependiendo de la clase sumaria +1.
+            '''
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
             for (i, var) in enumerate(self.var_nom):

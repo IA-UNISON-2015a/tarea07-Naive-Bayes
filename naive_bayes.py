@@ -99,3 +99,15 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
+Prueba con la base de datos de DNA sin ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 4.05 %
+Error de estimación en los datos de prueba: 5.649241146711636 %
+
+
+Prueba con la base de datos de DNA con ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 3.85%
+Error de estimación en los datos de prueba: 5.480607082630692%
+'''

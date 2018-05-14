@@ -103,3 +103,16 @@ if __name__ == "__main__":
     ee, ep = spam_filter()
     print("El error de entrenamiento es {}".format(ee))
     print("El error de predicción es {}".format(ep))
+
+"""
+    ¿Es posible detectar con Naive Bayes cuales son las palabras que más
+    influyen para decidir que un correo es Spam? ¿Cuales palabras son las
+    que determinan más claramente que un correo no es Spam?
+    
+    Si, de momento solo las que estan contenidas en el vocabulario. Las palabras 
+    mas influyentes son aquellas que aparacen mas en los archivos de entrenamiento.
+    
+    Incluso se podria crear una subclasificacion de palabras, en el ejemplo usado
+    si hablas de dinero o de tu pais/situacion actual, posiblemente sera clasificado
+    como spam, mas si eres un principe nigeriano.
+    """
