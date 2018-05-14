@@ -107,3 +107,22 @@ if __name__ == "__main__":
     ee, ep = spam_filter()
     print("El error de entrenamiento es {}".format(ee))
     print("El error de predicción es {}".format(ep))
+
+
+    """
+    Errores obtenidos:
+
+    error de entrenamiento = 4.7
+    error de predicción = 5.2
+
+    Conclusión:
+
+    Debería ser posible detectar las palabras que más influyen en decidir si un correo
+    es spam o no, si contabilizaramos el número de ocurrencias de las palabras que hacen
+    que la red lo clasifique como spam. Por decir algo, la mayoría de los correos clasificados
+    como spam tendrán palabras como "sponsor", "click", "free".
+    Las palabras que no tengan que ver con ofertas, dinero o anuncios a lo que observo en los resultados
+    son las que ayudan a determinar a clasificar un correo.
+
+
+    """
