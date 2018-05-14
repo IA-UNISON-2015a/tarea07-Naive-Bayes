@@ -18,7 +18,8 @@ Los datos ya vienen preprocesados de forma que
 __author__ = 'juliowaissman'
 
 from random import randint
-
+import nb
+import naive_bayes 
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +43,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -78,16 +79,27 @@ def spam_filter():
     """
     error_entrenamiento = 1.0
     error_prueba = 1.0
-
-    #  ---------------------------------------------------
-    #   agregar aqui el código
-    #  ---------------------------------------------------
+    
+    datos, clases = carga_datos('mails.data','mails.class')
+    
+    clasificador = nb.NaiveBayes([0, 1])
+    clasificador.aprende(datos, clases)
+    
+    #Entrenamiento
+    clases_estimadas_entrenamiento = clasificador.reconoce(datos)
+    error_entrenamiento = naive_bayes.error_clasif(clases, clases_estimadas_entrenamiento)
+        
+    #Pruebas
+    datos_prueba, clases_prueba = carga_datos('mails_test.data','mails_test.class')
+    
+    clases_estimadas_prueba = clasificador.reconoce(datos_prueba)
+    error_prueba = naive_bayes.error_clasif(clases_prueba, clases_estimadas_prueba)
 
     return error_entrenamiento, error_prueba
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
