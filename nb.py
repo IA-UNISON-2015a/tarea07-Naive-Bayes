@@ -66,7 +66,7 @@ class NaiveBayes:
         del valor val, de la variable var, cuando los datos están
         asociados a la clase clase.
 
-        De la misma manray para facilitar el reconocimiento se utiliza
+        De la misma manera para facilitar el reconocimiento se utiliza
         un diccionario self.log_probs
 
         """
@@ -85,9 +85,9 @@ class NaiveBayes:
         Aprende los valores de la CPT, es el trabajo a realizar
 
         @param datos: Lista [dato_1, ..., dato_N],
-                      donde dato_i es a su ves una lista
+                      donde dato_i es a su vez una lista
                       tal que dato_i = [d_i1, ..., d_in]
-                      es el vector quel i-ésimo dato.
+                      es el vector i-ésimo dato.
 
         @param clases: Lista [clase_1, ..., clase_N] con
                        las clases correspondientes a cada dato
@@ -95,7 +95,7 @@ class NaiveBayes:
 
         """
 
-        # Inicializa a cero todas las cuentas si no hay un valr previo
+        # Inicializa a cero todas las cuentas si no hay un valor previo
         # (en un futuro sería importante verificar si no hay algun valor nuevo
         # que no se hubiera agregado antes).
         inicializar = False
@@ -115,49 +115,33 @@ class NaiveBayes:
         # Se actualiza el valor de las frecuencias para calcular la
         # probabilidad a priori
         for clase in self.clases:
-            #  ---------------------------------------------------
-            #  agregar aqui el código
             self.frec['clases'][clase] += clases.count(clase)
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
 
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
             for (i, var) in enumerate(self.var_nom):
-
                 dato_var_clase = [datos[j][i] for j in range(len(datos))
                                   if clases[j] == clase]
-
                 for val in self.vals[var]:
-                    #  --------------------------------------------------
-                    #  agregar aquí el código
                     self.frec[var][clase][val] += dato_var_clase.count(val)
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
-                    #  --------------------------------------------------
 
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
-        N = sum([self.frec['clases'][cls] for cls in clases])
+        N = sum([self.frec['clases'][cls] for cls in self.frec['clases'].keys()])
+#        print(N)
+#        N = sum([self.frec['clases'][cls] for cls in self.clases])
+#        print(N)
         for clase in clases:
-            #  ---------------------------------------------------
-            #  agregar aqui el código
             Nc = self.frec['clases'][clase]
-            self.log_probs['clases'][clase] = log(N/Nc)
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
-
+            self.log_probs['clases'][clase] = log(Nc/N)
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
             for var in self.var_nom:
                 for val in self.vals[var]:
-                    #  --------------------------------------------------
-                    #  agregar aquí el código
                     Ncv = self.frec[var][clase][val]
                     K = len(self.vals[var])
                     self.log_probs[var][clase][val] = log((Ncv + 1)/(Nc + K))
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
-                    #  --------------------------------------------------
 
     def reconoce(self, datos):
         """
@@ -175,9 +159,6 @@ class NaiveBayes:
         """
         clases = []
 
-        #  ---------------------------------------------------
-        #  agregar aquí el código
-
         def log_prob(dato, clase):
             return (self.log_probs['clases'][clase] +
                     sum([self.log_probs[var][clase][dato[i]]
@@ -185,7 +166,6 @@ class NaiveBayes:
 
         clases = [max(self.clases, key=lambda clase: log_prob(dato, clase))
                   for dato in datos]
-        #  ---------------------------------------------------
         return clases
 
 
@@ -193,8 +173,8 @@ def test():
     """
     Esta funcion sirve para poder ir probando y corrigiendo el programa.
 
-    Hay 3 pruebas básicas, una para probar la inicialización, otra
-    para probar el aprendizaje (o el llenado de cuentas) y la 3ra para
+    Hay 4 pruebas básicas, una para probar la inicialización, dos
+    para probar el aprendizaje (o el llenado de cuentas) y la ultima para
     probar si el reconocimiento se hace correctamente. hasta que pasen
     todas las pruebas no hay que pasar al problema que se encuentra en
     el archivo naive_bayes.py
@@ -226,13 +206,13 @@ def test():
     print("La segunda prueba se completó con exito")
 
     assert nb.log_probs['clases']['N'] == log(5/8)
-    assert nb.frec['0']['P'][1] == log(1/7)
-    assert nb.frec['1']['N'][20] == log(4/7)
+    assert nb.log_probs['0']['P'][1] == log(1/7)
+    assert nb.log_probs['1']['N'][20] == log(4/7)
     print("La tercera prueba se completó con exito")
 
     data_test = [[2, 20], [4, 10]]
     clase_test = nb.reconoce(data_test)
-    print(clase_test)
+#    print(clase_test)
     assert clase_test == ['P', 'N']
     print("La cuarta prueba se completó con exito")
 

@@ -29,9 +29,7 @@ por debajo del 5%, mientras que el error en el conjunto de prueba debe
 de andar un poco por arriba del 5% pero claramente menor al 7%
 
 """
-
 import nb
-
 
 def carga_archivo(archivo):
     """
@@ -70,7 +68,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes()
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +86,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes()
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
@@ -103,3 +101,24 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# Prueba con la base de datos de DNA sin ruido
+# ----------------------------------------------
+# Error de estimación en los mismos datos: 4.05 %
+# Error de estimación en los datos de prueba: 5.649241146711636 %
+
+
+# Prueba con la base de datos de DNA con ruido
+# ----------------------------------------------
+# Error de estimación en los mismos datos: 3.85%
+# Error de estimación en los datos de prueba: 5.480607082630692%
+
+# Como se puede ver se logro nuestro objetivo que estaba al principio 
+# los datos originales tanto sin ruido o con ruido lograron llegar a un error
+# por debajo del 5% mientras que el error en los de prueba estan arriba
+# del 5% pero menor a 7%
+
+# Despues de realizar las pruebas podemos ver que los resultados se parecen,
+# pero en los resultados con ruido son un poco mejor. Esto se debe a que
+# los datos reales tienen mas peso a la hora de realizar calculos. 
+# que los datos con ruido, y el ruido en realidad no afecta mucho el resultado.
