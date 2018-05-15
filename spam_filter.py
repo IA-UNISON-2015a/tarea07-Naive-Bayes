@@ -17,6 +17,8 @@ Los datos ya vienen preprocesados de forma que
 
 __author__ = 'juliowaissman'
 
+import nb
+import naive_bayes
 from random import randint
 
 
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -79,15 +81,35 @@ def spam_filter():
     error_entrenamiento = 1.0
     error_prueba = 1.0
 
-    #  ---------------------------------------------------
-    #   agregar aqui el código
-    #  ---------------------------------------------------
+    datos, clases = carga_datos('mails.data', 'mails.class')
+    clasificador = nb.NaiveBayes()
+
+    clasificador.aprende(datos, clases)
+    clases_estimadas = clasificador.reconoce(datos)
+    error = naive_bayes.error_clasif(clases, clases_estimadas)
+
+    d_test, c_test = carga_datos('mails_test.data', 'mails_test.class')
+    c_e_test = clasificador.reconoce(d_test)
+    e_test = naive_bayes.error_clasif(c_test, c_e_test)
+
+    return error*100, e_test*100
 
     return error_entrenamiento, error_prueba
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}%".format(ee))
+    print("El error de predicción es {}%".format(ep))
+
+# Si se debe de poder ver cuales palabras son las mas influyentes para decidir si
+# es o no spam un correo por medio de que tan frecuente es una palabra.
+
+# Por lo general las palabras que determinan si es o no spam el correo contienen
+# las palabras 'email', 'emailadd', 'click', entre otras. En general palabras 
+# que tiene que ver con hacer click (incluida la palabra 'click') en links, ya sea
+# para realizar un 'deposit' o algo parecido.
+# Por las pruebas que hice pude notar que si el correo contenia la palabra
+# 'httpaddr' no es spam, aunque contenga algunas palabras que se incluyan en correos
+# spam.
