@@ -15,10 +15,12 @@ Los datos ya vienen preprocesados de forma que
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'Diego Bustamante'
 
 from random import randint
 
+import nb
+from naive_bayes import error_clasif
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -50,6 +52,7 @@ def ejemplo_datos():
     print("--------------------------------\n")
 
     for _ in range(10):
+
         mail = randint(0, len(clases) - 1)
         print("\nPara el mail {} tenemos las palabras:\n\n".format(mail))
         print([vocabulario[i] for i in range(len(vocabulario))
@@ -76,18 +79,50 @@ def spam_filter():
     de entrenamiento como con los datos de prueba
 
     """
-    error_entrenamiento = 1.0
-    error_prueba = 1.0
 
     #  ---------------------------------------------------
-    #   agregar aqui el código
+    #   agregar aqui el códig
     #  ---------------------------------------------------
+    clasificador = nb.NaiveBayes()
+
+    # Entrenamiento
+
+    datos, clases = carga_datos('mails.data', 'mails.class')
+    clasificador.aprende(datos, clases)
+    clases_estimadas = clasificador.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, clases_estimadas) * 100
+
+    # Prueba
+
+    datos_test, clases_test = carga_datos('mails_test.data', 'mails_test.class')
+    clases_estimadas_test = clasificador.reconoce(datos_test)
+    error_prueba = error_clasif(clases_test, clases_estimadas_test) * 100
+
 
     return error_entrenamiento, error_prueba
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+
+
+    """
+    Errores obtenidos:
+
+    error de entrenamiento = 4.7
+    error de predicción = 5.2
+
+    Conclusión:
+
+    Debería ser posible detectar las palabras que más influyen en decidir si un correo
+    es spam o no, si contabilizaramos el número de ocurrencias de las palabras que hacen
+    que la red lo clasifique como spam. Por decir algo, la mayoría de los correos clasificados
+    como spam tendrán palabras como "sponsor", "click", "free".
+    Las palabras que no tengan que ver con ofertas, dinero o anuncios a lo que observo en los resultados
+    son las que ayudan a determinar a clasificar un correo.
+
+
+    """
