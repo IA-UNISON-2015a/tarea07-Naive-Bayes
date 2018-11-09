@@ -122,6 +122,7 @@ class NaiveBayes:
 
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
+            self.frec['clases'][clase] += clases.count(clase)
             for (i, var) in enumerate(self.var_nom):
 
                 dato_var_clase = [datos[j][i] for j in range(len(datos))
@@ -132,7 +133,7 @@ class NaiveBayes:
                     #  agregar aquí el código
                     #  raise NotImplementedError("Falta cmletar esto para la tarea")
                     #  --------------------------------------------------
-
+                    self.frec[var][clase][val] = dato_var_clase.count(val)
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
@@ -145,13 +146,17 @@ class NaiveBayes:
 
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
+            num_clases = self.frec['clases'][clase]
             for var in self.var_nom:
+                self.log_probs['clases'][clase] = log(clases.count(clase)/len(clases))
                 for val in self.vals[var]:
                     #  --------------------------------------------------
                     #  agregar aquí el código
                     #  raise NotImplementedError("Falta cmletar esto para la tarea")
                     #  --------------------------------------------------
-
+                    self.log_probs[var][clase][val] = (
+                    log((self.frec[var][clase][val]+1)/
+                    (num_clases + len(self.vals[var]))))
     def reconoce(self, datos):
         """
         Identifica la clase a la que pertenece cada uno de los datos que
@@ -212,8 +217,8 @@ def test():
     print("La segunda prueba se completó con exito")
 
     assert nb.log_probs['clases']['N'] == log(5/8)
-    assert nb.frec['0']['P'][1] == log(1/7)
-    assert nb.frec['1']['N'][20] == log(4/7)
+    assert nb.log_probs['0']['P'][1] == log(1/7)
+    assert nb.log_probs['1']['N'][20] == log(4/7)
     print("La tercera prueba se completó con exito")
 
     data_test = [[2, 20], [4, 10]]
