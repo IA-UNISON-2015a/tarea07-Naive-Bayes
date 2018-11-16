@@ -103,3 +103,11 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    """
+    Comentarios:
+    Los errores son practicamente iguales. Yo pienso a partir de esto que
+    el ruido es poco significativo, y eso se debe a que es muy pequeño
+    comparado a los valores originales.
+
+    """

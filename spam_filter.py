@@ -104,3 +104,11 @@ if __name__ == "__main__":
     ee, ep = spam_filter()
     print("El error de entrenamiento es {}".format(ee))
     print("El error de predicción es {}".format(ep))
+
+    """
+    Comentaros:
+    Claro que sí. Busquemos todos los n-gramas que más ocurrencias tengan
+    en correos clasificados como Spam. Algunas palabras que mas ocurrencias
+    tienen (tipos o unigramas) son click y dinero. Pero considerarlo, quiza
+    haga que esto deje de ser tan inocente.
+    """
