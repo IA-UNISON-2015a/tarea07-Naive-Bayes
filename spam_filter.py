@@ -96,7 +96,7 @@ def spam_filter():
     pruebaE = error_clasif(clases, clasesR)
     
     
-    return error_entrenamiento, error_prueba
+    return entrenamientoE, pruebaE
 
 
 if __name__ == "__main__":
