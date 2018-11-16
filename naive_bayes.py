@@ -70,7 +70,8 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    # clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes()
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +89,8 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    # clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes()
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
@@ -103,3 +105,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    """
+    El porcentaje de error es muy parecido entre ellos, al agregar ruido 
+    se ve que es muy poco significativo.
+    """

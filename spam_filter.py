@@ -18,6 +18,8 @@ Los datos ya vienen preprocesados de forma que
 __author__ = 'juliowaissman'
 
 from random import randint
+from naive_bayes import error_clasif
+import nb
 
 
 def carga_datos(file_datos, file_clases):
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -82,12 +84,35 @@ def spam_filter():
     #  ---------------------------------------------------
     #   agregar aqui el código
     #  ---------------------------------------------------
+    datos, clases = carga_datos('mails.data','mails.class')
+
+    spam = nb.NaiveBayes()
+    spam.aprende(datos, clases)
+    clases_estimadas = spam.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, clases_estimadas)
+
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    clases_estimadas = spam.reconoce(datos)
+
+    error_prueba = error_clasif(clases,clases_estimadas)
 
     return error_entrenamiento, error_prueba
 
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+
+"""
+Pienso que si, las palabras que determinan que
+un correo no es spam, pienso que es posible viendo
+que palabras fueron las que provocaron que dicho correo
+fuera spam y revisar las frecuencias de ellas.Despues 
+comparamos las ocurrencias para considerarlo como un correo
+spam.
+
+Parece ser que las palabras que mas influyen
+en si es o no spam son las de "click"y "dinero"
+"""
