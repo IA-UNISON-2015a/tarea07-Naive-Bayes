@@ -70,7 +70,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes()
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)

@@ -3,9 +3,7 @@
 """
 nb.py
 ------------
-
 Clase genérica para realizar el método de clasificación de naive bayes.
-
 """
 
 __author__ = 'juliowaissman'
@@ -17,7 +15,6 @@ class NaiveBayes:
     """
     Clase genérica del clasificador naive bayes, para entradas con
     dominio discreto y finito
-
     """
 
     def __init__(self, clases=None, variables=None, valores=None):
@@ -115,6 +112,7 @@ class NaiveBayes:
         # Se actualiza el valor de las frecuencias para calcular la
         # probabilidad a priori
         for clase in self.clases:
+            self.frec['clases'][clase] += clases.count(clase)
             #  ---------------------------------------------------
             #  agregar aqui el código
             #  raise NotImplementedError("Falta cmletar esto para la tarea")
@@ -128,6 +126,7 @@ class NaiveBayes:
                                   if clases[j] == clase]
 
                 for val in self.vals[var]:
+                    self.frec[var][clase][val] += dato_var_clase.count(val)
                     #  --------------------------------------------------
                     #  agregar aquí el código
                     #  raise NotImplementedError("Falta cmletar esto para la tarea")
@@ -136,13 +135,15 @@ class NaiveBayes:
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
-        N = sum([self.frec['clases'][cls] for cls in clases])
+        N = sum([self.frec['clases'][cls] for cls in self.frec['clases']])
+        print(N)
         for clase in clases:
             #  ---------------------------------------------------
             #  agregar aqui el código
             #  raise NotImplementedError("Falta cmletar esto para la tarea")
             #  ---------------------------------------------------
-
+            Nc = self.frec['clases'][clase]
+            self.log_probs['clases'][clase] = log(Nc/N)
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
             for var in self.var_nom:
@@ -150,7 +151,10 @@ class NaiveBayes:
                     #  --------------------------------------------------
                     #  agregar aquí el código
                     #  raise NotImplementedError("Falta cmletar esto para la tarea")
-                    #  --------------------------------------------------
+                    Ncv = self.frec[var][clase][val]
+                    K = len(self.vals[var])
+                    # laplace rule
+                    self.log_probs[var][clase][val] = log((Ncv + 1) / (Nc + K) )                     #  --------------------------------------------------
 
     def reconoce(self, datos):
         """
@@ -167,11 +171,17 @@ class NaiveBayes:
 
         """
         clases = []
-
         #  ---------------------------------------------------
         #  agregar aquí el código
-
         #  ---------------------------------------------------
+        def log_prob(dato, clase):
+            return (self.log_probs['clases'][clase] +
+                    sum([self.log_probs[var][clase][dato[i]]
+                         for (i, var) in enumerate(self.var_nom)]))
+
+        clases = [max(self.clases, key=lambda clase: log_prob(dato, clase))
+                  for dato in datos]
+                  
         return clases
 
 
@@ -184,7 +194,6 @@ def test():
     probar si el reconocimiento se hace correctamente. hasta que pasen
     todas las pruebas no hay que pasar al problema que se encuentra en
     el archivo naive_bayes.py
-
     """
 
     clases = {'N', 'P'}
@@ -212,13 +221,13 @@ def test():
     print("La segunda prueba se completó con exito")
 
     assert nb.log_probs['clases']['N'] == log(5/8)
-    assert nb.frec['0']['P'][1] == log(1/7)
-    assert nb.frec['1']['N'][20] == log(4/7)
+    assert nb.log_probs['0']['P'][1] == log(1/7)
+    assert nb.log_probs['1']['N'][20] == log(4/7)
     print("La tercera prueba se completó con exito")
 
     data_test = [[2, 20], [4, 10]]
     clase_test = nb.reconoce(data_test)
-    print(clase_test)
+    # print(clase_test)
     assert clase_test == ['P', 'N']
     print("La cuarta prueba se completó con exito")
 
