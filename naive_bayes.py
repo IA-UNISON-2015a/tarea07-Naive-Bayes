@@ -70,7 +70,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes(variables=range(len(datos[0])))
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +88,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes(variables=range(len(datos[0])))
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
