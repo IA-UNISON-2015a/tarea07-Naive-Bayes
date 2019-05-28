@@ -19,6 +19,8 @@ __author__ = 'juliowaissman'
 
 from random import randint
 
+import nb
+
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -58,6 +60,13 @@ def ejemplo_datos():
                                       else "no es spam"))
         print("\n" + 20*'-')
 
+def error_clasif(c1, c2):
+    """
+    Encuentra el porcentaje de valores diferentes entre la lista c1 y la c2
+
+    """
+    acc = len([1 for i in range(len(c1)) if c1[i] != c2[i]])
+    return 1.0 * acc / len(c1)
 
 def spam_filter():
     """
@@ -83,11 +92,25 @@ def spam_filter():
     #   agregar aqui el código
     #  ---------------------------------------------------
 
+    # Cargamos los datos de entrenamiento.
+    datos, clases = carga_datos('mails.data','mails.class')
+
+    clasificador = nb.NaiveBayes()
+    clasificador.aprende(datos, clases)
+    pred = clasificador.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, pred)
+
+    # Cargamos los datos de prueba.
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+
+    pred = clasificador.reconoce(datos)
+    error_prueba = error_clasif(clases, pred)
+
     return error_entrenamiento, error_prueba
 
 
 if __name__ == "__main__":
-    ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    # ejemplo_datos()
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}%".format(ee*100))
+    print("El error de predicción es {}%".format(ep*100))
