@@ -15,10 +15,12 @@ Los datos ya vienen preprocesados de forma que
 
 """
 
-__author__ = 'juliowaissman'
+__author__ = 'Eduardo González Olea'
 
 from random import randint
+import nb
 
+from naive_bayes import error_clasif
 
 def carga_datos(file_datos, file_clases):
 
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -82,12 +84,34 @@ def spam_filter():
     #  ---------------------------------------------------
     #   agregar aqui el código
     #  ---------------------------------------------------
+    
+    datos, clases = carga_datos('mails.data', 'mails.class')
+    datos_test, clases_test = carga_datos('mails_test.data',
+                                          'mails_test.class')
 
+    clasificador = nb.NaiveBayes()
+    clasificador.aprende(datos, clases)
+
+    clases_estimadas = clasificador.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, clases_estimadas)
+
+    clases_estimadas_test = clasificador.reconoce(datos_test)
+    error_prueba = error_clasif(clases_test, clases_estimadas_test)
     return error_entrenamiento, error_prueba
 
+    
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+    
+    
+    
+"""
+Encontramos correos que son spam, y observando frecuencia de palabras
+puedo intuir que las palabras cómo "you, your, the, we " etc son palabras
+comunes 
+en correos spam, tal vez los pronombres personales..
+"""
