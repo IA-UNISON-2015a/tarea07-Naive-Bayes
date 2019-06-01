@@ -70,7 +70,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna.data")
-    clasificador = nb.NaiveBayes(range(len(datos[0])))
+    clasificador = nb.NaiveBayes()
 
     clasificador.aprende(datos, clases)
     clases_estimadas = clasificador.reconoce(datos)
@@ -88,7 +88,7 @@ def main():
     print("----------------------------------------------")
 
     datos, clases = carga_archivo("dna_noise.data")
-    clasificador_ruido = nb.NaiveBayes(range(len(datos[0])))
+    clasificador_ruido = nb.NaiveBayes()
 
     clasificador_ruido.aprende(datos, clases)
     clases_estimadas = clasificador_ruido.reconoce(datos)
@@ -103,3 +103,22 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+"""
+Prueba con la base de datos de DNA sin ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 4.05 %
+Error de estimación en los datos de prueba: 5.649241146711636 %
+
+
+Prueba con la base de datos de DNA con ruido
+----------------------------------------------
+Error de estimación en los mismos datos: 3.85%
+Error de estimación en los datos de prueba: 5.480607082630692%
+
+Podemos ver con estos resultados que a la hora de usar los datos de prueba el
+error es practicamente igual en ambos casos (con ruido y sin ruido) con una 
+pqueña diferencia de 0.2% esto nos dice que el ruido es muy poco y no afecta 
+tanto en el algoritmo.
+
+"""
