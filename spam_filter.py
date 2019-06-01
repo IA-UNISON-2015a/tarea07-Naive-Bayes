@@ -18,6 +18,8 @@ Los datos ya vienen preprocesados de forma que
 __author__ = 'juliowaissman'
 
 from random import randint
+from naive_bayes import error_clasif
+import nb
 
 
 def carga_datos(file_datos, file_clases):
@@ -42,7 +44,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -80,7 +82,22 @@ def spam_filter():
     error_prueba = 1.0
 
     #  ---------------------------------------------------
-    #   agregar aqui el código
+    
+    c_spam=nb.NaiveBayes() #cargamos nb en el clasificador de spam
+    
+    #datos de APRENDIZAJE 
+    datos, clases = carga_datos('mails.data','mails.class')
+    c_spam.aprende(datos, clases)
+    clases_e = c_spam.reconoce(datos)
+    error_entrenamiento = error_clasif(clases, clases_e)
+    
+     
+    #datos de PRUEBA 
+    datos_t, clases_t = carga_datos('mails_test.data','mails_test.class')
+    c_spam.aprende(datos_t, clases_t)
+    clases_e = c_spam.reconoce(datos_t)
+    error_prueba = error_clasif(clases, clases_e)
+     
     #  ---------------------------------------------------
 
     return error_entrenamiento, error_prueba
@@ -88,6 +105,14 @@ def spam_filter():
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
+    
+    
+    """
+    Se puede detectar que una de las palabras que tiene mas peso para clasificar
+    un correo como SPAM son 'click', 'transfer'...
+    ya que estas son palabras que si estan en un email por lo general este esta
+    clasificado como spam
+    """
