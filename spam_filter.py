@@ -111,8 +111,10 @@ if __name__ == "__main__":
     
     
     """
-    Se puede detectar que una de las palabras que tiene mas peso para clasificar
+    Se pueden detectar las palabras que tiene mas peso para clasificar
     un correo como SPAM son 'click', 'transfer'...
-    ya que estas son palabras que si estan en un email por lo general este esta
-    clasificado como spam
+    se tendria que ver el numero de apariciones de las palabrea en los 
+    correos clasificados como spam y se tendrian qie comparar con el 
+    numero de apariciones em los correos que no son spam, de ahi se puede ver
+    si tienen mas peso en el clasificador. pero esto seria mas especializado
     """
