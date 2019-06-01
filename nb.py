@@ -116,7 +116,7 @@ class NaiveBayes:
         # probabilidad a priori
         for clase in self.clases:
             #  ---------------------------------------------------
-            self.frec['clases'][clase] +=clase.count(clase)
+            self.frec['clases'][clase] +=clases.count(clase)
             #  ---------------------------------------------------
             
 
@@ -135,21 +135,31 @@ class NaiveBayes:
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
-        N = sum([self.frec['clases'][cls] for cls in clases])
+        N = sum([self.frec['clases'][cls] for cls in self.frec['clases'].keys()])
         for clase in clases:
             #  ---------------------------------------------------
             num_c = self.frec['clases'][clase]
-            self.log_probs['clases'][clase] = log(num_c,N)
+            self.log_probs['clases'][clase] = log(num_c/N)
             #  ---------------------------------------------------
 
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
             for var in self.var_nom:
+                k = len(self.vals[var])
                 for val in self.vals[var]:
                     #  --------------------------------------------------
-                    
+                    aux = self.frec[var][clase][val]
+                    self.log_probs[var][clase][val] = log((aux + 1)/( num_c + k))
                     #  --------------------------------------------------
 
+    #funcion auxiliar
+    def suma_prob(self, dato, clase):
+        
+            aux = sum((self.log_probs[var][clase][dato[i]] for i, var in enumerate(self.var_nom)))
+            
+            return self.log_probs['clases'][clase] + aux
+    
+    
     def reconoce(self, datos):
         """
         Identifica la clase a la que pertenece cada uno de los datos que
@@ -165,10 +175,10 @@ class NaiveBayes:
 
         """
         clases = []
-
+        
         #  ---------------------------------------------------
-        #  agregar aquí el código
-
+        clases =[max(self.clases, key=lambda clase: self.suma_prob(dato,clase))
+                     for dato in datos] 
         #  ---------------------------------------------------
         return clases
 
@@ -210,8 +220,8 @@ def test():
     print("La segunda prueba se completó con exito")
 
     assert nb.log_probs['clases']['N'] == log(5/8)
-    assert nb.frec['0']['P'][1] == log(1/7)
-    assert nb.frec['1']['N'][20] == log(4/7)
+    assert nb.log_probs['0']['P'][1] == log(1/7)
+    assert nb.log_probs['1']['N'][20] == log(4/7)
     print("La tercera prueba se completó con exito")
 
     data_test = [[2, 20], [4, 10]]
