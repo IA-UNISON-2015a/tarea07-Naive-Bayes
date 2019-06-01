@@ -66,7 +66,7 @@ class NaiveBayes:
         del valor val, de la variable var, cuando los datos están
         asociados a la clase clase.
 
-        De la misma manray para facilitar el reconocimiento se utiliza
+        De la misma manera y para facilitar el reconocimiento se utiliza
         un diccionario self.log_probs
 
         """
@@ -116,9 +116,9 @@ class NaiveBayes:
         # probabilidad a priori
         for clase in self.clases:
             #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
+            self.frec['clases'][clase] +=clase.count(clase)
             #  ---------------------------------------------------
+            
 
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
@@ -129,8 +129,7 @@ class NaiveBayes:
 
                 for val in self.vals[var]:
                     #  --------------------------------------------------
-                    #  agregar aquí el código
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
+                    self.frec[var][clase][val]+= dato_var_clase.count(val)
                     #  --------------------------------------------------
 
         # Ahora hay que actualizar al final los logaritmos de las
@@ -139,8 +138,8 @@ class NaiveBayes:
         N = sum([self.frec['clases'][cls] for cls in clases])
         for clase in clases:
             #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
+            num_c = self.frec['clases'][clase]
+            self.log_probs['clases'][clase] = log(num_c,N)
             #  ---------------------------------------------------
 
             # Ahora se actualiza la probabilidad por cada atributo y
@@ -148,8 +147,7 @@ class NaiveBayes:
             for var in self.var_nom:
                 for val in self.vals[var]:
                     #  --------------------------------------------------
-                    #  agregar aquí el código
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
+                    
                     #  --------------------------------------------------
 
     def reconoce(self, datos):
