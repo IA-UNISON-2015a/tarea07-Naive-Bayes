@@ -152,13 +152,21 @@ class NaiveBayes:
                     K = len(self.vals[var]) # cardinalidad de var
                     self.log_probs[var][clase][val] = log((Ncv + 1) / (Nc + K) ) # laplace rule
                     #  --------------------------------------------------               
-                    
+
+    """
+    Funcion auxiliar para dar mas claridad al proceso de reconocer
+    """
+    def suma_log(self, dato, clase):
+        suma = 0
+        for i,var in enumerate(self.var_nom):
+            suma += self.log_probs[var][clase][dato[i]]
+        return suma + self.log_probs['clases'][clase]
+
     #TODO - FUNCION RECONOCE
     def reconoce(self, datos):
         """
         Identifica la clase a la que pertenece cada uno de los datos que
         se solicite, de acuerdo al clasificador.
-
         @param datos = [dato_1, dato_2, ...] es una lista de datos
                        para clasificar, donde dato_i = [dato_i,1,
                        ..., dato_i,n] es el valor del dato en cada
@@ -166,20 +174,11 @@ class NaiveBayes:
                        utilizar el método de naive bayes si no se
                        conocen todos los atributos. Si un atributo no
                        se conoce dato(i,n) = None.
-
         """
         clases = []
-        #  ---------------------------------------------------
-        #  agregar aquí el código
-        #  ---------------------------------------------------
-        def log_prob(dato, clase):
-            return (self.log_probs['clases'][clase] +
-                    sum([self.log_probs[var][clase][dato[i]]
-                         for (i, var) in enumerate(self.var_nom)]))
 
-        clases = [max(self.clases, key=lambda clase: log_prob(dato, clase))
+        clases = [max(self.clases, key=lambda clase: self.suma_log(dato, clase))
                   for dato in datos]
-                  
         return clases
 
 
