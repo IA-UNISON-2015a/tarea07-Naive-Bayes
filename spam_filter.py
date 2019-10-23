@@ -42,7 +42,7 @@ def ejemplo_datos():
     datos, clases = carga_datos('mails.data', 'mails.class')
     vocabulario = carga_vocabulario()
 
-    print("Datos: {1} con dimensión {}".format(len(datos), len(datos[0])))
+    print("Datos: {} con dimensión {}".format(len(datos), len(datos[0])))
     print("Clases: {}".format(len(clases)))
     print("Vocabulario: {}".format(len(vocabulario)))
 
@@ -58,7 +58,7 @@ def ejemplo_datos():
                                       else "no es spam"))
         print("\n" + 20*'-')
 
-
+#TODO - SPAM_FILTER
 def spam_filter():
     """
     Filtro spam a desarrollar para reconocer si un correo es spam o no.
@@ -83,6 +83,19 @@ def spam_filter():
     #   agregar aqui el código
     #  ---------------------------------------------------
 
+    datos, clases = carga_datos('mails.data', 'mails.class')
+
+    bayes = nb.NaiveBayes()
+    bayes.aprende(datos, clases)
+    clasesReconocidas = bayes.reconoce(datos)
+
+    error_entrenamiento = error_clasif(clases, clasesReconocidas)
+
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    clasesReconocidas = bayes.reconoce(datos)
+
+    error_prueba = error_clasif(clases, clasesReconocidas)
+    #  ---------------------------------------------------
     return error_entrenamiento, error_prueba
 
 
