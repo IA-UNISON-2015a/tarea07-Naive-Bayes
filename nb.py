@@ -77,6 +77,7 @@ class NaiveBayes:
                           for var in self.var_nom}
         self.log_probs['clases'] = {clase: 0 for clase in self.clases}
 
+    #TODO - FUNCION APRENDE
     def aprende(self, datos, clases):
         """
         Aprende los valores de la CPT, es el trabajo a realizar
@@ -111,39 +112,33 @@ class NaiveBayes:
 
         # Se actualiza el valor de las frecuencias para calcular la
         # probabilidad a priori
-        for clase in self.clases:
+        for clase in self.clases: # en ejemplo de los asserts, ['N', 'P', 'P', 'N', 'N', 'P', 'N', 'N']
+            #  ---------------------------------------------------
+            # Para cada clase (catagoria que puede tomar nuestra consulta), contamos cuantas veces aparece
             self.frec['clases'][clase] += clases.count(clase)
             #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
-
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
-            # para cada posible clase        #
-            for (i, var) in enumerate(self.var_nom):
-
+            # para cada posible clase
+            for (i, var) in enumerate(self.var_nom): # identificadores de las variables
+                #datos para cada variable de cada clase
                 dato_var_clase = [datos[j][i] for j in range(len(datos))
                                   if clases[j] == clase]
-
-                for val in self.vals[var]:
-                    self.frec[var][clase][val] += dato_var_clase.count(val)
+                for val in self.vals[var]: # valores posible de la variable
                     #  --------------------------------------------------
-                    #  agregar aquí el código
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
+                    # cuantas veces aparece  el valor en la lista que es los datos
+                    self.frec[var][clase][val] += dato_var_clase.count(val)
                     #  --------------------------------------------------
 
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
-        N = sum([self.frec['clases'][cls] for cls in self.frec['clases']])
-        print(N)
+        N = sum([self.frec['clases'][cls] for cls in self.frec['clases']]) # total de veces que sucede cls
         for clase in clases:
             #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
             Nc = self.frec['clases'][clase]
-            self.log_probs['clases'][clase] = log(Nc/N)
+            self.log_probs['clases'][clase] = log(Nc / N)
+            #  ---------------------------------------------------
+
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
             for var in self.var_nom:
@@ -151,11 +146,14 @@ class NaiveBayes:
                     #  --------------------------------------------------
                     #  agregar aquí el código
                     #  raise NotImplementedError("Falta cmletar esto para la tarea")
+                    # TODO: Actualizar probabilidad, Laplace
+                    # task: explicar esto
                     Ncv = self.frec[var][clase][val]
-                    K = len(self.vals[var])
-                    # laplace rule
-                    self.log_probs[var][clase][val] = log((Ncv + 1) / (Nc + K) )                     #  --------------------------------------------------
-
+                    K = len(self.vals[var]) # cardinalidad de var
+                    self.log_probs[var][clase][val] = log((Ncv + 1) / (Nc + K) ) # laplace rule
+                    #  --------------------------------------------------               
+                    
+    #TODO - FUNCION RECONOCE
     def reconoce(self, datos):
         """
         Identifica la clase a la que pertenece cada uno de los datos que
