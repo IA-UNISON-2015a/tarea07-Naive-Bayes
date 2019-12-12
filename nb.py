@@ -115,11 +115,8 @@ class NaiveBayes:
         # Se actualiza el valor de las frecuencias para calcular la
         # probabilidad a priori
         for clase in self.clases:
-            #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
-
+            # Contrar ocurrencias por clase
+            self.frec['clases'][clase] += clases.count(clase)
             # Ahora se actualiza el valor de las frecuencias por cada atributo y
             # para cada posible clase        #
             for (i, var) in enumerate(self.var_nom):
@@ -128,29 +125,24 @@ class NaiveBayes:
                                   if clases[j] == clase]
 
                 for val in self.vals[var]:
-                    #  --------------------------------------------------
-                    #  agregar aquí el código
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
-                    #  --------------------------------------------------
+                    # Contar apariciones en los datos
+                    self.frec[var][clase][val] += dato_var_clase.count(val)
 
         # Ahora hay que actualizar al final los logaritmos de las
         # probabilidades para hacer el reconocimiento muy rápido (Usar
         # únicamente la información de self.frec par hacer esto)
         N = sum([self.frec['clases'][cls] for cls in clases])
         for clase in clases:
-            #  ---------------------------------------------------
-            #  agregar aqui el código
-            #  raise NotImplementedError("Falta cmletar esto para la tarea")
-            #  ---------------------------------------------------
+            self.log_probs['clases'][clase] = log(self.frec['clases'][clase]/N)
 
             # Ahora se actualiza la probabilidad por cada atributo y
             # para cada posible clase        #
             for var in self.var_nom:
                 for val in self.vals[var]:
-                    #  --------------------------------------------------
-                    #  agregar aquí el código
-                    #  raise NotImplementedError("Falta cmletar esto para la tarea")
-                    #  --------------------------------------------------
+                    # Laplace smoothing, (Me base en una explicacion en el libro de PLN
+                    self.log_probs[var][clase][val] = log((self.frec[var][clase][val] + 1) /
+                                                          (self.frec['clases'][clase] + len(self.vals[var]) ))
+
 
     def reconoce(self, datos):
         """
@@ -168,10 +160,14 @@ class NaiveBayes:
         """
         clases = []
 
-        #  ---------------------------------------------------
-        #  agregar aquí el código
+        for dato in datos:
+            prob_clase = []
 
-        #  ---------------------------------------------------
+            for clase in self.clases:
+                prob_clase.append((self.log_probs['clases'][clase] +
+                    sum([self.log_probs[var][clase][val] for (var, val) in zip(self.var_nom, dato)]), clase))
+            clases.append(max(prob_clase)[1])
+
         return clases
 
 
