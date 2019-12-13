@@ -81,6 +81,18 @@ def spam_filter():
 
     #  ---------------------------------------------------
     #   agregar aqui el código
+        datos, clases = carga_datos('mails.data', 'mails.class')
+
+    bayes = nb.NaiveBayes()
+    bayes.aprende(datos, clases)
+    clasesReconocidas = bayes.reconoce(datos)
+
+    error_entrenamiento = error_clasif(clases, clasesReconocidas)
+
+    datos, clases = carga_datos('mails_test.data','mails_test.class')
+    clasesReconocidas = bayes.reconoce(datos)
+
+    error_prueba = error_clasif(clases, clasesReconocidas)
     #  ---------------------------------------------------
 
     return error_entrenamiento, error_prueba
@@ -88,6 +100,6 @@ def spam_filter():
 
 if __name__ == "__main__":
     ejemplo_datos()
-    #  ee, ep = spam_filter()
-    #  print("El error de entrenamiento es {}".format(ee))
-    #  print("El error de predicción es {}".format(ep))
+    ee, ep = spam_filter()
+    print("El error de entrenamiento es {}".format(ee))
+    print("El error de predicción es {}".format(ep))
